@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Psych Season 1 Tier List</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f4f3ef;
+    color: #1f1f1d;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  p.sub {
+    font-size: 14px;
+    color: #6b6a64;
+    margin: 0 0 24px;
+  }
+  #tierlist {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tier-row {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .tier-label {
+    width: 56px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 20px;
+  }
+  .drop-zone {
+    flex: 1;
+    min-height: 96px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 8px;
+    padding: 10px;
+    background: #ffffff;
+    transition: background 0.15s ease;
+  }
+  .drop-zone.pool {
+    border: 1.5px dashed #bbb;
+    border-radius: 8px;
+    background: #fafaf7;
+  }
+  .drop-zone.drag-over {
+    background: #e6f1fb;
+  }
+  .ep-square {
+    width: 92px;
+    height: 92px;
+    border-radius: 8px;
+    background: #fbfaf7;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: grab;
+    user-select: none;
+    flex-shrink: 0;
+    padding: 6px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  .ep-square:active { cursor: grabbing; }
+  .ep-square .ep-icon {
+    font-size: 18px;
+  }
+  .ep-square .ep-num {
+    font-size: 10px;
+    font-weight: 600;
+    color: #8a8a83;
+  }
+  .ep-square .ep-title {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+  #pool-label {
+    font-size: 13px;
+    color: #6b6a64;
+    margin: 24px 0 8px;
+  }
+  #reset-btn {
+    margin-top: 20px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+  }
+  #reset-btn:hover { background: #f0f0ec; }
+</style>
+</head>
+<body>
+
+<h1>Psych — season 1 tier list</h1>
+<p class="sub">Drag each episode into a tier. Your ranking saves automatically in this browser.</p>
+
+<div id="tierlist">
+  <div class="tier-row">
+    <div class="tier-label" style="background:#F0997B; color:#4A1B0C;">S</div>
+    <div class="drop-zone" data-tier="S"></div>
+  </div>
+  <div class="tier-row">
+    <div class="tier-label" style="background:#FAC775; color:#412402;">A</div>
+    <div class="drop-zone" data-tier="A"></div>
+  </div>
+  <div class="tier-row">
+    <div class="tier-label" style="background:#C0DD97; color:#173404;">B</div>
+    <div class="drop-zone" data-tier="B"></div>
+  </div>
+  <div class="tier-row">
+    <div class="tier-label" style="background:#85B7EB; color:#042C53;">C</div>
+    <div class="drop-zone" data-tier="C"></div>
+  </div>
+  <div class="tier-row">
+    <div class="tier-label" style="background:#F09595; color:#501313;">F</div>
+    <div class="drop-zone" data-tier="F"></div>
+  </div>
+</div>
+
+<p id="pool-label">Unranked episodes — drag into a tier above</p>
+<div id="pool" class="drop-zone pool" data-tier="pool"></div>
+
+<button id="reset-btn">Reset all</button>
+
+<script>
+var episodes = [
+  {n:1, t:"Pilot", icon:"\u2691"},
+  {n:2, t:"Spellingg Bee", icon:"\uD83D\uDD24"},
+  {n:3, t:"Speak Now or Forever Hold Your Piece", icon:"\u2666"},
+  {n:4, t:"Woman Seeking Dead Husband", icon:"$"},
+  {n:5, t:"9 Lives", icon:"\uD83D\uDC31"},
+  {n:6, t:"Weekend Warriors", icon:"\u2694"},
+  {n:7, t:"Who Ya Gonna Call?", icon:"\uD83D\uDC7B"},
+  {n:8, t:"Shawn vs. the Red Phantom", icon:"\uD83C\uDFAD"},
+  {n:9, t:"Forget Me Not", icon:"\uD83D\uDD0D"},
+  {n:10, t:"From the Earth to Starbucks", icon:"\u2615"},
+  {n:11, t:"Oops He's Dead", icon:"\uD83C\uDF38"},
+  {n:12, t:"Cloudy... With a Chance of Murder", icon:"\u2601"},
+  {n:13, t:"Game, Set... Muuurder?", icon:"\uD83C\uDFC6"},
+  {n:14, t:"Poker? I Barely Know Her", icon:"\uD83C\uDCCF"},
+  {n:15, t:"Scary Sherry: Bianca's Toast", icon:"\uD83C\uDF7E"}
+];
+
+var STORAGE_KEY = "psych_s1_tierlist";
+
+function makeSquare(ep) {
+  var c = document.createElement("div");
+  c.className = "ep-square";
+  c.draggable = true;
+  c.dataset.n = ep.n;
+  c.title = "Episode " + ep.n + ": " + ep.t;
+
+  var icon = document.createElement("div");
+  icon.className = "ep-icon";
+  icon.textContent = ep.icon;
+
+  var num = document.createElement("div");
+  num.className = "ep-num";
+  num.textContent = "Ep " + ep.n;
+
+  var label = document.createElement("div");
+  label.className = "ep-title";
+  label.textContent = ep.t;
+
+  c.appendChild(icon);
+  c.appendChild(num);
+  c.appendChild(label);
+
+  c.addEventListener("dragstart", function (e) {
+    e.dataTransfer.setData("text/plain", ep.n);
+    setTimeout(function () { c.style.opacity = "0.3"; }, 0);
+  });
+  c.addEventListener("dragend", function () {
+    c.style.opacity = "1";
+    saveState();
+  });
+
+  return c;
+}
+
+function buildAll() {
+  var byId = {};
+  episodes.forEach(function (ep) {
+    byId[ep.n] = makeSquare(ep);
+  });
+  return byId;
+}
+
+function saveState() {
+  var state = {};
+  document.querySelectorAll(".drop-zone").forEach(function (zone) {
+    var tier = zone.dataset.tier;
+    state[tier] = Array.prototype.map.call(
+      zone.querySelectorAll(".ep-square"),
+      function (el) { return el.dataset.n; }
+    );
+  });
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (err) {}
+}
+
+function loadState(squares) {
+  var raw;
+  try {
+    raw = localStorage.getItem(STORAGE_KEY);
+  } catch (err) {
+    raw = null;
+  }
+  var pool = document.getElementById("pool");
+
+  if (!raw) {
+    episodes.forEach(function (ep) { pool.appendChild(squares[ep.n]); });
+    return;
+  }
+
+  var state;
+  try {
+    state = JSON.parse(raw);
+  } catch (err) {
+    state = null;
+  }
+  if (!state) {
+    episodes.forEach(function (ep) { pool.appendChild(squares[ep.n]); });
+    return;
+  }
+
+  var placed = {};
+  Object.keys(state).forEach(function (tier) {
+    var zone = document.querySelector('.drop-zone[data-tier="' + tier + '"]');
+    if (!zone) return;
+    state[tier].forEach(function (n) {
+      if (squares[n]) {
+        zone.appendChild(squares[n]);
+        placed[n] = true;
+      }
+    });
+  });
+  episodes.forEach(function (ep) {
+    if (!placed[ep.n]) pool.appendChild(squares[ep.n]);
+  });
+}
+
+var squares = buildAll();
+loadState(squares);
+
+document.querySelectorAll(".drop-zone").forEach(function (zone) {
+  zone.addEventListener("dragover", function (e) {
+    e.preventDefault();
+    zone.classList.add("drag-over");
+  });
+  zone.addEventListener("dragleave", function () {
+    zone.classList.remove("drag-over");
+  });
+  zone.addEventListener("drop", function (e) {
+    e.preventDefault();
+    zone.classList.remove("drag-over");
+    var n = e.dataTransfer.getData("text/plain");
+    var el = document.querySelector('.ep-square[data-n="' + n + '"]');
+    if (el) {
+      zone.appendChild(el);
+      saveState();
+    }
+  });
+});
+
+document.getElementById("reset-btn").addEventListener("click", function () {
+  var pool = document.getElementById("pool");
+  document.querySelectorAll(".ep-square").forEach(function (el) {
+    pool.appendChild(el);
+  });
+  saveState();
+});
+</script>
+
+</body>
+</html>
