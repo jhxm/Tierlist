@@ -80,8 +80,13 @@
     text-align: center;
   }
   .ep-square:active { cursor: grabbing; }
-  .ep-square .ep-icon {
-    font-size: 18px;
+  
+  .ep-square .ep-image {
+    width: 100%;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 6px;
+
   }
   .ep-square .ep-num {
     font-size: 10px;
@@ -150,21 +155,21 @@
 
 <script>
 var episodes = [
-  {n:1, t:"Pilot", icon:"\u2691", img: "E1-1.png"},
-  {n:2, t:"Spellingg Bee", icon:"\uD83D\uDD24"},
-  {n:3, t:"Speak Now or Forever Hold Your Piece", icon:"\u2666"},
-  {n:4, t:"Woman Seeking Dead Husband", icon:"$"},
-  {n:5, t:"9 Lives", icon:"\uD83D\uDC31"},
-  {n:6, t:"Weekend Warriors", icon:"\u2694"},
-  {n:7, t:"Who Ya Gonna Call?", icon:"\uD83D\uDC7B"},
-  {n:8, t:"Shawn vs. the Red Phantom", icon:"\uD83C\uDFAD"},
-  {n:9, t:"Forget Me Not", icon:"\uD83D\uDD0D"},
-  {n:10, t:"From the Earth to Starbucks", icon:"\u2615"},
-  {n:11, t:"Oops He's Dead", icon:"\uD83C\uDF38"},
-  {n:12, t:"Cloudy... With a Chance of Murder", icon:"\u2601"},
-  {n:13, t:"Game, Set... Muuurder?", icon:"\uD83C\uDFC6"},
-  {n:14, t:"Poker? I Barely Know Her", icon:"\uD83C\uDCCF"},
-  {n:15, t:"Scary Sherry: Bianca's Toast", icon:"\uD83C\uDF7E"}
+  {n:1, t:"Pilot", img: "E1-1.png"},
+  {n:2, t:"Spellingg Bee", img: "E2-1.png"},
+  {n:3, t:"Speak Now or Forever Hold Your Piece", img: "E3-1.png"},
+  {n:4, t:"Woman Seeking Dead Husband", img: "E4-1.png"},
+  {n:5, t:"9 Lives", img: "E5-1.png"},
+  {n:6, t:"Weekend Warriors", img: "E6-1.png"},
+  {n:7, t:"Who Ya Gonna Call?", img: "E7-1.png"},
+  {n:8, t:"Shawn vs. the Red Phantom", img: "E8-1.png"},
+  {n:9, t:"Forget Me Not", img: "E9-1.png"},
+  {n:10, t:"From the Earth to Starbucks", img: "E10-1.png"},
+  {n:11, t:"Oops He's Dead", img: "E11-1.png"},
+  {n:12, t:"Cloudy... With a Chance of Murder", img: "E12-1.png"},
+  {n:13, t:"Game, Set... Muuurder?", img: "E13-1.png"},
+  {n:14, t:"Poker? I Barely Know Her", img: "E14-1.png"},
+  {n:15, t:"Scary Sherry: Bianca's Toast", img: "E15-1.png"}
 ];
 
 var STORAGE_KEY = "psych_s1_tierlist";
@@ -176,9 +181,9 @@ function makeSquare(ep) {
   c.dataset.n = ep.n;
   c.title = "Episode " + ep.n + ": " + ep.t;
 
-  var icon = document.createElement("div");
-  icon.className = "ep-icon";
-  icon.textContent = ep.icon;
+  var img = document.createElement("img");
+  img.className = "ep-img";
+  img.textContent = ep.img;
 
   var num = document.createElement("div");
   num.className = "ep-num";
@@ -188,7 +193,7 @@ function makeSquare(ep) {
   label.className = "ep-title";
   label.textContent = ep.t;
 
-  c.appendChild(icon);
+  c.appendChild(img);
   c.appendChild(num);
   c.appendChild(label);
 
